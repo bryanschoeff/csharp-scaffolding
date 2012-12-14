@@ -1,0 +1,14 @@
+<!--
+################################################################
+# Fields for <%= name %>
+################################################################
+-->
+<fieldset id="<%= name %>">
+<% @fields.each do |field| %>
+  <div class="fieldline">
+  	<label for="<%= field.webform_textbox %>"></label>
+  	<asp:TextBox ID="<%= field.webform_textbox %>" runat="server" CssClass="moneyinput money"></asp:TextBox>
+  </div>
+<% end %>
+</fieldset>
+

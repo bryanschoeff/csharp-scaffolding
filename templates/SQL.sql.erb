@@ -1,0 +1,174 @@
+USE [<%= @database %>]
+GO
+/****** Object:  Table [dbo].[<%= print_sql_table_name %>]    Script Date: 11/26/2012 13:45:37 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[<%= print_sql_table_name %>](
+	[<%= name %>ID] [int] IDENTITY(1,1) NOT NULL<% @fields.each do |field| %>
+	,<%= field.sql_column %> <%= field.db_type %> NULL<% end %>
+ CONSTRAINT [PK_<%= print_sql_table_name %>] PRIMARY KEY CLUSTERED 
+(
+	[<%= name %>ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 60) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+
+
+
+
+/****** Object:  StoredProcedure [dbo].[<%= print_sql_sp_name_load %>]    Script Date: 11/26/2012 13:45:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Bryan J Schoeff
+-- Create date: <%= RunDate %>
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_load %>]
+	-- Add the parameters for the stored procedure here
+    @<%= name %>ID int 
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+   
+    SELECT [<%= name %>ID]<% @fields.each do |field| %>
+          ,<%= field.sql_column %><% end %>
+	  FROM [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+	 WHERE [<%= name %>ID] = @<%= name %>ID
+		  
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[<%= print_sql_sp_name_load_by_filingid %>]    Script Date: 11/26/2012 13:45:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Bryan J Schoeff
+-- Create date: <%= RunDate %>
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_load_by_filingid %>]
+	-- Add the parameters for the stored procedure here
+    @FilingID int 
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+   
+    SELECT [<%= name %>ID]<% @fields.each do |field| %>
+          ,<%= field.sql_column %><% end %>
+	  FROM [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+	 WHERE [FilingID] = @FilingID
+		  
+END
+GO
+
+
+/****** Object:  StoredProcedure [dbo].[<%= print_sql_sp_name_delete %>]    Script Date: 11/26/2012 13:45:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Bryan J Schoeff
+-- Create date: <%= RunDate %>
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_delete %>]
+	-- Add the parameters for the stored procedure here
+    @<%= name %>ID int 
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+   
+    DELETE FROM [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+		  WHERE [<%= name %>ID] = @<%= name %>ID
+		  
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[<%= print_sql_sp_name_save %>]    Script Date: 11/26/2012 13:45:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Bryan J Schoeff
+-- Create date: <%= RunDate %>
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_save %>]
+	-- Add the parameters for the stored procedure here
+	<% @fields.each do |field| %>
+    <%= field.sql_parameter %> <%= field.db_type %><%= ',' if (fields.last != field) %><% end %>
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+   
+    INSERT INTO [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+			   (<% @fields.each do |field| %><%= ',' if (fields.first != field) %><%= field.sql_column %><%= ')' if (fields.last == field) %>
+			   <% end %>
+		VALUES (<% @fields.each do |field| %><%= field.sql_parameter %><%= if (fields.last != field) then ',' else ')' end %>
+			   <% end %>
+	
+	SELECT SCOPE_IDENTITY()
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[<%= print_sql_sp_name_update %>]    Script Date: 11/26/2012 13:45:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Bryan J Schoeff
+-- Create date: <%= RunDate %>
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_update %>]
+	-- Add the parameters for the stored procedure here
+    @<%= name %>ID int<% @fields.each do |field| %>,
+    <%= field.sql_parameter %> <%= field.db_type %><% end %>
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+   
+    UPDATE [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+	   SET<% @fields.each do |field| %><%= if (fields.first != field) then ',' else ' ' end %><%= field.sql_column %> = <%= field.sql_parameter %> 
+		  <% end %>
+	 WHERE [<%= name %>ID] = @<%= name %>ID
+	
+END
+GO
+
+
+/****** Object:  Default [DF_SharedServices_DateEntered]    Script Date: 11/26/2012 13:45:39 ******/
+--ALTER TABLE [dbo].<%= @database %> ADD  CONSTRAINT [DF_SharedServices_DateEntered]  DEFAULT (getdate()) FOR [DateEntered]
+--GO

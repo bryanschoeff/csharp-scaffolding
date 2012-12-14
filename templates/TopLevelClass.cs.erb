@@ -1,0 +1,148 @@
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace <%= ApplicationName %>.Models.<%= "#{@entity_type}.#{@filing_type}" %>
+{
+  public class Filing
+  {
+    public int ID { get; set; }
+	public string EntityID { get; set; }
+    public string EntityType { get; set; }
+    public string IdentityHash { get; set; }
+    public int Year { get; set; }
+	public string FilingType { get; set; }<% @tables.each do |table| %>
+    public <%= "#{table.name} #{table.name} { get; set; }"  %><% end %>
+
+    public Filing()
+    {
+      this.ID = -1;
+	  <% @tables.each do |table| %>
+	  <%= "this.#{table.name} = new #{table.name}();"  %><% end %> 
+    }
+	
+	public void Load(int ID)
+    {
+      using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString + ";initial catalog=<%= DatabaseName %>"))
+      {
+        SqlCommand command = new SqlCommand("FilingsGetByID", connection);
+        SqlDataReader reader;
+        
+		command.CommandType = CommandType.StoredProcedure;
+        command.Parameters.AddWithValue("@FilingID", ID);
+
+        connection.Open();
+        reader = command.ExecuteReader();                                                   
+        reader.Read();
+		
+		this.EntityID = (string)reader["EntityID"];
+		this.EntityType = (string)reader["EntityType"];
+		this.FilingType = (string)reader["FilingType"];
+		this.ID = ID;
+		
+        connection.Close();
+		<% @tables.each do |table| %>
+        this.<%= table.name %>.LoadByFilingID(this.ID);<% end %>
+      }
+    }
+	
+	public void Save()
+    {
+      if (this.ID == -1)
+      {
+        SaveNew();
+		SaveAllChildren();
+		SaveNewJson();
+      }
+      else
+      {
+        Update();
+		SaveAllChildren();
+		UpdateJson();
+      }
+	  
+    }
+	
+	protected void SaveAllChildren()
+	{
+		<% @tables.each do |table| %>
+		<%= "this.#{table.name}.Save();"  %><% end %> 
+	}
+	
+	public void SaveNew()
+    {
+	  using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString + ";initial catalog=<%= DatabaseName %>"))
+      {
+        SqlCommand command = new SqlCommand("FilingsAdd", connection);
+		
+		command.CommandType = CommandType.StoredProcedure;
+        command.Parameters.AddWithValue("@EntityID", this.EntityID);
+		command.Parameters.AddWithValue("@EntityType", this.EntityType);
+		command.Parameters.AddWithValue("@FilingType", this.FilingType);
+
+        connection.Open();
+        this.ID = System.Convert.ToInt32(command.ExecuteScalar());
+		
+        connection.Close();
+		<% @tables.each do |table| %>
+        this.<%= table.name %>.FilingID = this.ID;<% end %>
+      }
+      
+    }
+	
+	public void Update()
+    {
+	  using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString + ";initial catalog=<%= DatabaseName %>"))
+      {
+        SqlCommand command = new SqlCommand("FilingsUpdate", connection);
+		
+		command.CommandType = CommandType.StoredProcedure;
+		command.Parameters.AddWithValue("@FilingID", this.ID);
+        command.Parameters.AddWithValue("@EntityID", this.EntityID);
+		command.Parameters.AddWithValue("@EntityType", this.EntityType);
+		command.Parameters.AddWithValue("@FilingType", this.FilingType);
+
+        connection.Open();
+        command.ExecuteNonQuery();                                                   
+		
+        connection.Close();
+
+      }
+      
+    }
+	
+	public void SaveNewJson()
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString + ";initial catalog=BryanSandbox"))
+        {
+            SqlCommand command = new SqlCommand("FilingsJsonAdd", connection);
+
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@FilingID", this.ID);
+            command.Parameters.AddWithValue("@Data", Newtonsoft.Json.JsonConvert.SerializeObject(this));
+
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+
+    public void UpdateJson()
+    {
+        using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString + ";initial catalog=BryanSandbox"))
+        {
+            SqlCommand command = new SqlCommand("FilingsJsonUpdateByFilingID", connection);
+
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@FilingID", this.ID);
+            command.Parameters.AddWithValue("@Data", Newtonsoft.Json.JsonConvert.SerializeObject(this));
+
+            connection.Open();
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+    }
+    
+  }
+}
