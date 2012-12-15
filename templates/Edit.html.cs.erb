@@ -1,0 +1,17 @@
+@model <%= "Skellington.Models.#{object_name}" %>
+
+<h1><%= display_name %></h1>
+
+@using (Html.BeginForm()) {
+
+@Html.HiddenFor(model => model.ID)
+
+@Html.HiddenFor(model => model.<%= object_name %>.ID)
+<% @fields.each do |field| %>
+<div class="field-row">
+	@Html.LabelFor(model => model.<%= "#{field.csharp_name}" %>, new { @class = "statement-label" } )
+	@Html.TextBoxFor(model => model.<%= "#{field.csharp_name}" %>, new { @class = "statement-money" } )
+</div><% end %>
+<br />
+<input type="submit" value="Save Changes" />
+}
