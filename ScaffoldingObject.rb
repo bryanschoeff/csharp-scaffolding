@@ -9,8 +9,8 @@ class ScaffoldingObject
     @template_erb_class = File.open('templates/Class.cs.erb') { |f| f.read }
     @template_erb_sql = File.open('templates/SQL.sql.erb') { |f| f.read }
     @template_erb_webform = File.open('templates/WebForm.aspx.erb') { |f| f.read }
-    @template_erb_view_edit = File.open('templates/Edit.cs.erb') { |f| f.read }
-    @template_erb_view_index = File.open('templates/Index.cs.erb') { |f| f.read }
+    @template_erb_view_edit = File.open('templates/Edit.html.cs.erb') { |f| f.read }
+    #@template_erb_view_index = File.open('templates/Index.cs.erb') { |f| f.read }
   end
 
   def add_field field
@@ -18,7 +18,7 @@ class ScaffoldingObject
   end
 
   def object_name
-	"#{cap name}".gsub(' ', '')
+	"#{display_name}".gsub(' ', '')
   end
   
   def display_name
@@ -35,17 +35,22 @@ class ScaffoldingObject
     template.result(binding)
   end
 
+  def print_mvc_form
+    template = ERB.new @template_erb_view_edit
+    template.result(binding)
+  end
+
   def print_webform_fields
     template = ERB.new @template_erb_webform
     template.result(binding)
   end
 
- def print_sql_table_name
+  def print_sql_table_name
     "#{object_name}"
   end
 
   def print_sql_sp_name_load
-    "#{obect_name}GetByID"
+    "#{object_name}GetByID"
   end
  
   def print_sql_sp_name_update

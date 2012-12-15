@@ -1,5 +1,5 @@
 class ScaffoldingField
-  attr_accessor :calculation_table, :category, :sub_category, :tertiary_category, :field, :db_type, :calculated
+  attr_accessor :field, :db_type
 
   def initialize
   end
@@ -18,37 +18,29 @@ class ScaffoldingField
     end
 
   end
-
+ 
   def name
-	result = cap @field
-    result = "#{cap @tertiary_category}_#{result}" if @tertiary_category
-    result = "#{cap @sub_category}_#{result}" if @sub_category
-    result = "#{cap @category}_#{result}" if @category
-	result
+    display_name.gsub(' ','')
   end
-  
+
   def sql_parameter
-    "@#{name}".gsub(' ', '')
+    "@#{name}"
   end
 
   def display_name
-    result = cap @field
-    result = "#{cap @tertiary_category} - #{result}" if @tertiary_category
-    #result = "#{cap @sub_category} - #{result}" if @sub_category
-    #result = "#{cap @category} - #{result}" if @category
-	result
+    cap @field
   end
   
   def csharp_name
-    name.gsub(' ', '')
+    name
   end
 
   def sql_column
-    "[#{name.gsub(' ', '')}]"
+    "[#{name}]"
   end
 
   def sql_column_name
-	name.gsub(' ', '')
+	name
   end
 
   def calculated_name
@@ -60,7 +52,7 @@ class ScaffoldingField
   end
 
   def view_field_id
-    name.gsub(' ', '_')
+    name
   end
 
   def cap words

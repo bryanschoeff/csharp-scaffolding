@@ -3,23 +3,16 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.ComponentModel.DataAnnotations;
 
-namespace <%= ApplicationName %>.Models.<%= "#{@entity_type}.#{@filing_type}" %>
+namespace <%= ApplicationName %>.Models
 {
-  public class <%= name %>
+  public class <%= object_name %>
   {
     public int ID { get; set; }
     <% @fields.each do |field| %>
 	[Display(Name = "<%= field.display_name %>")]
     public <%= "#{field.csharp_type} #{field.csharp_name} { get; set; }"  %><% end %>
-
-	// Derived Fields
-	<% @calculations.each do |calculation, fields| %>
-	public int <%= "#{calculation}" %>
-	{
-		get { return <% fields.each do |field| %><% if field.calculated %><%= "#{field.calculation_table}_#{field.calculated_name}" %><% else %><%= field.csharp_name %><% end %><%= (field == fields.last) ? ";" : " + " %><% end %> }
-	}
-	<% end %>
-    public <%= name %>()
+  
+    public <%= object_name %>()
     {
       this.ID = -1;
     }
@@ -32,7 +25,7 @@ namespace <%= ApplicationName %>.Models.<%= "#{@entity_type}.#{@filing_type}" %>
         SqlDataReader reader;
         
 		command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= name  %>ID", ID);
+        command.Parameters.AddWithValue("@<%= object_name %>ID", ID);
 
         connection.Open();
         reader = command.ExecuteReader();                                                   
@@ -44,28 +37,6 @@ namespace <%= ApplicationName %>.Models.<%= "#{@entity_type}.#{@filing_type}" %>
       }
     }
 	
-	public void LoadByFilingID(int FilingID)
-    {
-      using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString + ";initial catalog=<%= DatabaseName %>"))
-      {
-        SqlCommand command = new SqlCommand("<%= print_sql_sp_name_load_by_filingid %>", connection);
-        SqlDataReader reader;
-        
-		command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@FilingID", FilingID);
-
-        connection.Open();
-        reader = command.ExecuteReader();                                                   
-        reader.Read();
-		
-		this.ID = (int)reader["<%= name  %>ID"];
-        <% @fields.each do |field| %>
-        this.<%= field.csharp_name %> = (<%= field.csharp_type %>)reader["<%= field.sql_column_name %>"];<% end %>
-		
-        connection.Close();
-      }
-    }
-
     public void Save()
     {
       if (this.ID == -1)
@@ -101,7 +72,7 @@ namespace <%= ApplicationName %>.Models.<%= "#{@entity_type}.#{@filing_type}" %>
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_update %>", connection);
 
 		command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= name %>ID", this.ID);
+        command.Parameters.AddWithValue("@<%= object_name %>ID", this.ID);
         <% @fields.each do |field| %>
         command.Parameters.AddWithValue("<%= field.sql_parameter  %>", this.<%= field.csharp_name %>);<% end %>
 
@@ -118,7 +89,7 @@ namespace <%= ApplicationName %>.Models.<%= "#{@entity_type}.#{@filing_type}" %>
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_delete %>", connection);
 
 		command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= name %>ID", this.ID);
+        command.Parameters.AddWithValue("@<%= object_name %>ID", this.ID);
 
         connection.Open();
         command.ExecuteNonQuery();  

@@ -7,9 +7,8 @@ class ApplicationSpec
     @tables = Array.new
   end
 
-  def add_calculation calculation, field
-    @calculations[calculation] = Array.new unless @calculations[calculation]
-    @calculations[calculation] << field
+  def add_table table
+    @tables << table
   end
 
 end
