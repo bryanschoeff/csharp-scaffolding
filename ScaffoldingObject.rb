@@ -1,7 +1,8 @@
 require_relative 'ScaffoldingField'
 
 class ScaffoldingObject
-  attr_accessor :database, :name, :fields
+  attr_accessor :database, :name
+  attr_reader :fields
 
   def initialize
     @fields = Array.new
@@ -10,7 +11,6 @@ class ScaffoldingObject
     @template_erb_sql = File.open('templates/SQL.sql.erb') { |f| f.read }
     @template_erb_webform = File.open('templates/WebForm.aspx.erb') { |f| f.read }
     @template_erb_view_edit = File.open('templates/Edit.html.cs.erb') { |f| f.read }
-    #@template_erb_view_index = File.open('templates/Index.cs.erb') { |f| f.read }
   end
 
   def add_field field

@@ -9,8 +9,8 @@
 @Html.HiddenFor(model => model.<%= object_name %>.ID)
 <% @fields.each do |field| %>
 <div class="field-row">
-	@Html.LabelFor(model => model.<%= "#{field.csharp_name}" %>, new { @class = "statement-label" } )
-	@Html.TextBoxFor(model => model.<%= "#{field.csharp_name}" %>, new { @class = "statement-money" } )
+	@Html.LabelFor(model => model.<%= "#{field.csharp_name}" %>)
+	@Html.TextBoxFor(model => model.<%= "#{field.csharp_name}" %>)
 </div><% end %>
 <br />
 <input type="submit" value="Save Changes" />

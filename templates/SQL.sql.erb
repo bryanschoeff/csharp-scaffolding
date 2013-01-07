@@ -27,7 +27,7 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_load %>]
 	-- Add the parameters for the stored procedure here
-    @<%= name %>ID int 
+    @<%= object_name %>ID int 
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -57,7 +57,7 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_delete %>]
 	-- Add the parameters for the stored procedure here
-    @<%= name %>ID int 
+    @<%= object_name %>ID int 
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from

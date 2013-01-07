@@ -75,7 +75,8 @@ def print_outputs spec
   view_path = "#{OutputPath}views/"
 
   FileUtils.mkpath(model_path) if !(File.exists?(model_path) && File.directory?(model_path))
-	
+  FileUtils.mkpath(view_path) if !(File.exists?(view_path) && File.directory?(view_path))	
+
   spec.tables.each do |table|  	  
     # models
     File.open("#{model_path}#{table.object_name}.cs", 'w') {|f| f.write(table.print_csharp_class) }
@@ -85,8 +86,8 @@ def print_outputs spec
     webform += table.print_webform_fields
 
     # views
-	FileUtils.mkpath(view_path) if !(File.exists?(view_path) && File.directory?(view_path))
-	File.open("#{view_path}Edit.cshtml", 'w') {|f| f.write(table.print_mvc_form) }
+    FileUtils.mkpath("#{view_path}#{table.object_name}") if !(File.exists?("#{view_path}#{table.object_name}") && File.directory?("#{view_path}#{table.object_name}"))	
+	File.open("#{view_path}#{table.object_name}/Edit.cshtml", 'w') {|f| f.write(table.print_mvc_form) }
 
     # webforms  
 	File.open("#{OutputPath}#{table.object_name}Edit.aspx", 'w') {|f| f.write(webform) }
