@@ -9,7 +9,7 @@ namespace <%= ApplicationName %>.Models
   {
     public int ID { get; set; }
     <% @fields.each do |field| %>
-	[Display(Name = "<%= field.display_name %>")]
+	[Display(Name = "<%= field.display_name %>")<%= ", DisplayFormat(ConvertEmptyStringToNull = false)" if field.csharp_type == "string" %>]
     public <%= "#{field.csharp_type} #{field.csharp_name} { get; set; }"  %><% end %>
   
     public <%= object_name %>()
@@ -25,7 +25,7 @@ namespace <%= ApplicationName %>.Models
         SqlDataReader reader;
         
 		command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= object_name %>ID", ID);
+        command.Parameters.AddWithValue("@<%= id_name %>ID", ID);
 
         connection.Open();
         reader = command.ExecuteReader();                                                   
@@ -72,7 +72,7 @@ namespace <%= ApplicationName %>.Models
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_update %>", connection);
 
 		command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= object_name %>ID", this.ID);
+        command.Parameters.AddWithValue("@<%= id_name %>ID", this.ID);
         <% @fields.each do |field| %>
         command.Parameters.AddWithValue("<%= field.sql_parameter  %>", this.<%= field.csharp_name %>);<% end %>
 
@@ -89,7 +89,7 @@ namespace <%= ApplicationName %>.Models
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_delete %>", connection);
 
 		command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= object_name %>ID", this.ID);
+        command.Parameters.AddWithValue("@<%= id_name %>ID", this.ID);
 
         connection.Open();
         command.ExecuteNonQuery();  
