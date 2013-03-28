@@ -1,0 +1,87 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Imports System.Configuration
+Imports System.ComponentModel.DataAnnotations
+
+Namespace <%= ApplicationName %>.Models
+
+  Public Class <%= object_name %>
+    Public Property ID As Integer
+    <% @fields.each do |field| %>
+	<Display(Name:="<%= field.display_name %>")<%= ", DisplayFormat(ConvertEmptyStringToNull:=False)" if field.csharp_type == "string" %>>
+    Public Property <%= "#{field.vb_name} As #{field.vb_type}"  %><% end %>
+  
+    Public Sub New()
+      Me.ID = -1
+    End Sub
+    
+    Public Sub Load(byval ID As Integer)
+      Using connection As New SqlConnection(ConfigurationManager.ConnectionStrings("connection").ConnectionString + "initial catalog=<%= DatabaseName %>")
+        Dim command As New SqlCommand("<%= print_sql_sp_name_load %>", connection)
+        dim reader As SqlDataReader 
+        
+		command.CommandType = CommandType.StoredProcedure
+        command.Parameters.AddWithValue("@<%= id_name %>ID", ID)
+
+        connection.Open()
+        reader = command.ExecuteReader()                                                   
+        reader.Read()
+        <% @fields.each do |field| %>
+        Me.<%= field.csharp_name %> = reader("<%= field.sql_column_name %>")<% end %>
+		Me.ID = ID
+        connection.Close()
+      End Using
+    End Sub
+	
+    Public Sub Save()
+      If (Me.ID = -1) Then
+        SaveNew()
+      Else
+        Update()
+      End If
+    End Sub
+
+    Protected Sub SaveNew()
+      Using connection As New SqlConnection(ConfigurationManager.ConnectionStrings("connection").ConnectionString + "initial catalog=<%= DatabaseName %>")
+        Dim command As New SqlCommand("<%= print_sql_sp_name_save %>", connection)
+        
+		command.CommandType = CommandType.StoredProcedure
+        <% @fields.each do |field| %>
+        command.Parameters.AddWithValue("<%= field.sql_parameter  %>", Me.<%= field.vb_name %>)<% end %>
+
+        connection.Open()
+        Me.ID = System.Convert.ToInt32(command.ExecuteScalar())
+        connection.Close()
+      End Using
+    End Sub
+
+    Protected Sub Update()
+      Using connection As New SqlConnection(ConfigurationManager.ConnectionStrings("connection").ConnectionString + "initial catalog=<%= DatabaseName %>")
+        Dim command As New SqlCommand("<%= print_sql_sp_name_update %>", connection)
+
+		command.CommandType = CommandType.StoredProcedure
+        command.Parameters.AddWithValue("@<%= id_name %>ID", Me.ID)
+        <% @fields.each do |field| %>
+        command.Parameters.AddWithValue("<%= field.sql_parameter  %>", Me.<%= field.vb_name %>)<% end %>
+
+        connection.Open()
+        command.ExecuteNonQuery()  
+        connection.Close()
+	  End Using
+	End Sub
+	  
+    Public Sub Delete()
+      Using connection As New SqlConnection(ConfigurationManager.ConnectionStrings("connection").ConnectionString + "initial catalog=<%= DatabaseName %>")
+        Dim command As New SqlCommand("<%= print_sql_sp_name_delete %>", connection)
+
+		command.CommandType = CommandType.StoredProcedure
+        command.Parameters.AddWithValue("@<%= id_name %>ID", Me.ID)
+
+        connection.Open()
+        command.ExecuteNonQuery()  
+        connection.Close()
+      End Using
+    End Sub
+	
+  End Class
+End Namespace

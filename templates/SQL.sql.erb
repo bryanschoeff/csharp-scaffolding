@@ -6,11 +6,19 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[<%= print_sql_table_name %>](
+<<<<<<< HEAD
     [<%= object_name %>ID] [int] IDENTITY(1,1) NOT NULL<% @fields.each do |field| %>
     ,<%= field.sql_column %> <%= field.db_type %> NULL<% end %>
  CONSTRAINT [PK_<%= print_sql_table_name %>] PRIMARY KEY CLUSTERED 
 (
     [<%= object_name %>ID] ASC
+=======
+	[<%= id_name %>ID] [int] IDENTITY(1,1) NOT NULL<% @fields.each do |field| %>
+	,<%= field.sql_column %> <%= field.db_type %> NULL<% end %>
+ CONSTRAINT [PK_<%= print_sql_table_name %>] PRIMARY KEY CLUSTERED 
+(
+	[<%= id_name %>ID] ASC
+>>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 60) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -26,8 +34,13 @@ GO
 -- Description:    
 -- =============================================
 CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_load %>]
+<<<<<<< HEAD
     -- Add the parameters for the stored procedure here
     @<%= object_name %>ID int 
+=======
+	-- Add the parameters for the stored procedure here
+    @<%= id_name %>ID int 
+>>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -36,11 +49,17 @@ BEGIN
 
     -- Insert statements for procedure here
    
-    SELECT [<%= object_name %>ID]<% @fields.each do |field| %>
+    SELECT [<%= id_name %>ID]<% @fields.each do |field| %>
           ,<%= field.sql_column %><% end %>
+<<<<<<< HEAD
       FROM [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
      WHERE [<%= object_name %>ID] = @<%= object_name %>ID
           
+=======
+	  FROM [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+	 WHERE [<%= id_name %>ID] = @<%= id_name %>ID
+		  
+>>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 END
 GO
 
@@ -56,8 +75,13 @@ GO
 -- Description:    
 -- =============================================
 CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_delete %>]
+<<<<<<< HEAD
     -- Add the parameters for the stored procedure here
     @<%= object_name %>ID int 
+=======
+	-- Add the parameters for the stored procedure here
+    @<%= id_name %>ID int 
+>>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
@@ -67,8 +91,13 @@ BEGIN
     -- Insert statements for procedure here
    
     DELETE FROM [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+<<<<<<< HEAD
           WHERE [<%= object_name %>ID] = @<%= object_name %>ID
           
+=======
+		  WHERE [<%= id_name %>ID] = @<%= id_name %>ID
+		  
+>>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 END
 GO
 
@@ -115,8 +144,13 @@ GO
 -- Description:    
 -- =============================================
 CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_update %>]
+<<<<<<< HEAD
     -- Add the parameters for the stored procedure here
     @<%= object_name %>ID int<% @fields.each do |field| %>,
+=======
+	-- Add the parameters for the stored procedure here
+    @<%= id_name %>ID int<% @fields.each do |field| %>,
+>>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
     <%= field.sql_parameter %> <%= field.db_type %><% end %>
 AS
 BEGIN
@@ -127,10 +161,17 @@ BEGIN
     -- Insert statements for procedure here
    
     UPDATE [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+<<<<<<< HEAD
        SET<% @fields.each do |field| %><%= if (fields.first != field) then ',' else ' ' end %><%= field.sql_column %> = <%= field.sql_parameter %> 
           <% end %>
      WHERE [<%= object_name %>ID] = @<%= object_name %>ID
     
+=======
+	   SET<% @fields.each do |field| %><%= if (fields.first != field) then ',' else ' ' end %><%= field.sql_column %> = <%= field.sql_parameter %> 
+		  <% end %>
+	 WHERE [<%= id_name %>ID] = @<%= id_name %>ID
+	
+>>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 END
 GO
 

@@ -5,8 +5,8 @@ require 'ERB'
 require_relative 'ApplicationSpec.rb'
 
 RunDate = Time.new.strftime("%Y.%m.%d")
-ApplicationName = "Skellington"
-DatabaseName = "BryanSandbox"
+ApplicationName = "Confirmation_Of_Independence.Models"
+DatabaseName = "HR"
 
 ApplicationPath = "#{Dir.pwd}/"
 SourcePath = "#{ApplicationPath}source/"
@@ -35,11 +35,11 @@ def load_file file, spec
   current_line = ''
 
   CSV.foreach(file, {:headers => :first_row}) do |line|
-    if ("#{line[0]}" != current_line)
+    if ("#{line[0]}#{line[1]}" != current_line)
       spec.add_table table unless table.nil?
 	  
       table = initialize_table line
-      current_line = "#{line[0]}" 
+      current_line = "#{line[0]}#{line[1]}" 
     end
 
     field = initialize_field line
@@ -53,8 +53,8 @@ end
 def initialize_field line
 	field = ScaffoldingField.new
 
-	field.field = line[1]
-    field.db_type = line[2]
+	field.field = line[2]
+    field.db_type = line[3]
 	field
 end
 
@@ -62,7 +62,8 @@ def initialize_table line
 	table = ScaffoldingObject.new
 	
 	table.database = DatabaseName
-	table.name = line[0]
+	table.prefix = line[0]
+	table.name = line[1]
 	table
 end
 
@@ -80,7 +81,8 @@ def print_outputs spec
   spec.tables.each do |table|  	  
     # models
     File.open("#{model_path}#{table.object_name}.cs", 'w') {|f| f.write(table.print_csharp_class) }
-    
+    File.open("#{model_path}#{table.object_name}.vb", 'w') {|f| f.write(table.print_vb_class) }
+	
     # views, webforms, sql
     sql += table.print_sql_script
     webform += table.print_webform_fields

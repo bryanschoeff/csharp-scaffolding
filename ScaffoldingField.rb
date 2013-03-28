@@ -5,7 +5,7 @@ class ScaffoldingField
   end
 
   def csharp_type
-    if @db_type.include? 'decimal'
+    if @db_type.include? 'money'
       "decimal"
     elsif @db_type.include? 'varchar'
       "string"
@@ -16,7 +16,20 @@ class ScaffoldingField
     else
       "string"
     end
-
+  end
+  
+  def vb_type
+    if @db_type.include? 'money'
+      "Decimal"
+    elsif @db_type.include? 'varchar'
+      "String"
+    elsif @db_type.include? 'int'
+      "Integer"
+    elsif @db_type.include? 'bit'
+      "Boolean"
+    else
+      "String"
+    end
   end
  
   def name
@@ -33,6 +46,10 @@ class ScaffoldingField
   
   def csharp_name
     name
+  end
+  
+  def vb_name
+	csharp_name
   end
 
   def sql_column
