@@ -9,11 +9,7 @@ namespace <%= ApplicationName %>.Models
   {
     public int ID { get; set; }
     <% @fields.each do |field| %>
-<<<<<<< HEAD
-    [Display(Name = "<%= field.display_name %>")]
-=======
 	[Display(Name = "<%= field.display_name %>")<%= ", DisplayFormat(ConvertEmptyStringToNull = false)" if field.csharp_type == "string" %>]
->>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
     public <%= "#{field.csharp_type} #{field.csharp_name} { get; set; }"  %><% end %>
 
     public <%= object_name %>()
@@ -27,15 +23,9 @@ namespace <%= ApplicationName %>.Models
       {
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_load %>", connection);
         SqlDataReader reader;
-<<<<<<< HEAD
 
-        command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= object_name %>ID", ID);
-=======
-        
 		command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@<%= id_name %>ID", ID);
->>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 
         connection.Open();
         reader = command.ExecuteReader();
@@ -81,13 +71,9 @@ namespace <%= ApplicationName %>.Models
       {
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_update %>", connection);
 
-<<<<<<< HEAD
-        command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= object_name %>ID", this.ID);
-=======
 		command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@<%= id_name %>ID", this.ID);
->>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
+
         <% @fields.each do |field| %>
         command.Parameters.AddWithValue("<%= field.sql_parameter  %>", this.<%= field.csharp_name %>);<% end %>
 
@@ -103,13 +89,8 @@ namespace <%= ApplicationName %>.Models
       {
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_delete %>", connection);
 
-<<<<<<< HEAD
-        command.CommandType = CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("@<%= object_name %>ID", this.ID);
-=======
 		command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@<%= id_name %>ID", this.ID);
->>>>>>> 421509bb831d0c282df8e2b59bb13ac72049937d
 
         connection.Open();
         command.ExecuteNonQuery();

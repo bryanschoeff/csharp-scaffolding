@@ -1,21 +1,21 @@
 Prefix,Table,Column,DB Type
-Confirmation Of Independence,Submissions,Employee ID,varchar(50)
-Confirmation Of Independence,Submissions,First Name,varchar(50)
-Confirmation Of Independence,Submissions,Last Name,varchar(50)
-Confirmation Of Independence,Submissions,Department,varchar(100)
-Confirmation Of Independence,Submissions,Filing Type,varchar(100)
-Confirmation Of Independence,Submissions,Year,int
-Confirmation Of Independence,Submissions,Filename,varchar(255)
-Confirmation Of Independence,Submissions,Submitted Date,datetime
-Confirmation Of Independence,Submissions,CFAE Approval,bit
-Confirmation Of Independence,Submissions,CFAE Approval Date,datetime
-Confirmation Of Independence,Submissions,CFAE Approval Notes,varchar(MAX)
-Confirmation Of Independence,Submissions,Chief Of Staff Approval,bit
-Confirmation Of Independence,Submissions,Chief Of Staff Approval Date,datetime
-Confirmation Of Independence,Submissions,Chief Of Staff Approval Notes,varchar(MAX)
-Confirmation Of Independence,Submissions,Chief Deputy Auditor Approval,bit
-Confirmation Of Independence,Submissions,Chief Deputy Auditor Approval Date,datetime
-Confirmation Of Independence,Submissions,Chief Deputy Auditor Approval Notes,varchar(MAX)
-Confirmation Of Independence,Submissions,HR Review,bit
-Confirmation Of Independence,Submissions,HR Review Date,datetime
-Confirmation Of Independence,Submissions,HR Review Notes,varchar(MAX)
+,Services,Project Name,nvarchar(100)
+,Services,Lead Entity,nvarchar(255)
+,Services,Effective Year,nvarchar(255)
+,Services,Subject Type Id,int
+,Services,State,nvarchar(15)
+,Services,Participating Entities,nvarchar(500)
+,Services,County,nvarchar(35)
+,Services,Region,nvarchar(15)
+,Services,Contact Name,nvarchar(75)
+,Services,Contact Phone,nvarchar(30)
+,Services,Contact Email,nvarchar(50)
+,Services,Link For Additional Information,ntext
+,Services,Description Of Collaboration,ntext
+,Services,Annual Savings,money
+,Services,One Time Savings,money
+,Services,Previous Audit,int
+,Services,Who Entered,nvarchar(15)
+,Services,Approved For Web,bit
+,Services,Date Entered,datetime
+,Services,Date Updated,datetime
