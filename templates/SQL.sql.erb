@@ -15,6 +15,35 @@ CREATE TABLE [dbo].[<%= print_sql_table_name %>](
 ) ON [PRIMARY]
 GO
 
+
+/****** Object:  StoredProcedure [dbo].[<%= print_sql_sp_name_all %>]    Script Date: 11/26/2012 13:45:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:        Bryan J Schoeff
+-- Create date: <%= RunDate %>
+-- Description:    
+-- =============================================
+CREATE PROCEDURE [dbo].[<%= print_sql_sp_name_all %>]
+	-- Add the parameters for the stored procedure here
+AS
+BEGIN
+    -- SET NOCOUNT ON added to prevent extra result sets from
+    -- interfering with SELECT statements.
+    SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+
+    SELECT [<%= id_name %>ID]<% @fields.each do |field| %>
+          ,<%= field.sql_column %><% end %>
+	  FROM [<%= @database %>].[dbo].[<%= print_sql_table_name %>]
+
+END
+GO
+
+
 /****** Object:  StoredProcedure [dbo].[<%= print_sql_sp_name_load %>]    Script Date: 11/26/2012 13:45:39 ******/
 SET ANSI_NULLS ON
 GO
@@ -134,11 +163,13 @@ BEGIN
 END
 GO
 
+GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_all %>] TO Intranet
 GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_load %>] TO Intranet
 GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_delete %>] TO Intranet
 GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_save %>] TO Intranet
 GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_update %>] TO Intranet
 
+GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_all %>] TO Internet
 GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_load %>] TO Internet
 GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_delete %>] TO Internet
 GRANT EXECUTE ON [dbo].[<%= print_sql_sp_name_save %>] TO Internet

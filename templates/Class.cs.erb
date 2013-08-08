@@ -9,8 +9,8 @@ namespace <%= ApplicationName %>.Models
   {
     public int ID { get; set; }
     <% @fields.each do |field| %>
-	[Display(Name = "<%= field.display_name %>")<%= ", DisplayFormat(ConvertEmptyStringToNull = false)" if field.csharp_type == "string" %>]
-    public <%= "#{field.csharp_type} #{field.csharp_name} { get; set; }"  %><% end %>
+        [Display(Name = "<%= field.display_name %>")<%= ", DisplayFormat(ConvertEmptyStringToNull = false)" if field.csharp_type == "string" %>]
+        public <%= "#{field.csharp_type} #{field.csharp_name} { get; set; }"  %><% end %>
 
     public <%= object_name %>()
     {
@@ -24,15 +24,15 @@ namespace <%= ApplicationName %>.Models
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_load %>", connection);
         SqlDataReader reader;
 
-		command.CommandType = CommandType.StoredProcedure;
+        command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@<%= id_name %>ID", ID);
 
         connection.Open();
         reader = command.ExecuteReader();
         reader.Read();
         <% @fields.each do |field| %>
-        this.<%= field.csharp_name %> = (<%= field.csharp_type %>)reader["<%= field.sql_column_name %>"];<% end %>
-        this.ID = ID;
+            this.<%= field.csharp_name %> = (<%= field.csharp_type %>)reader["<%= field.sql_column_name %>"];<% end %>
+        this.ID = (int)reader["<%= object_name %>ID"];
         connection.Close();
       }
     }
@@ -57,7 +57,7 @@ namespace <%= ApplicationName %>.Models
 
         command.CommandType = CommandType.StoredProcedure;
         <% @fields.each do |field| %>
-        command.Parameters.AddWithValue("<%= field.sql_parameter  %>", this.<%= field.csharp_name %>);<% end %>
+            command.Parameters.AddWithValue("<%= field.sql_parameter  %>", this.<%= field.csharp_name %>);<% end %>
 
         connection.Open();
         this.ID = System.Convert.ToInt32(command.ExecuteScalar());
@@ -71,11 +71,11 @@ namespace <%= ApplicationName %>.Models
       {
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_update %>", connection);
 
-		command.CommandType = CommandType.StoredProcedure;
+        command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@<%= id_name %>ID", this.ID);
 
         <% @fields.each do |field| %>
-        command.Parameters.AddWithValue("<%= field.sql_parameter  %>", this.<%= field.csharp_name %>);<% end %>
+            command.Parameters.AddWithValue("<%= field.sql_parameter  %>", this.<%= field.csharp_name %>);<% end %>
 
         connection.Open();
         command.ExecuteNonQuery();
@@ -89,7 +89,7 @@ namespace <%= ApplicationName %>.Models
       {
         SqlCommand command = new SqlCommand("<%= print_sql_sp_name_delete %>", connection);
 
-		command.CommandType = CommandType.StoredProcedure;
+        command.CommandType = CommandType.StoredProcedure;
         command.Parameters.AddWithValue("@<%= id_name %>ID", this.ID);
 
         connection.Open();
@@ -97,5 +97,36 @@ namespace <%= ApplicationName %>.Models
         connection.Close();
       }
     }
+
+    public static Dictionary<int, <%= object_name %>> All()
+    {
+      Dictionary<int, <%= object_name %>> <%= object_name.pluralize.downcase %> = new Dictionary<int, <%= object_name %>>();
+
+      using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ConnectionString + ";initial catalog=<%= DatabaseName %>"))
+      {
+        SqlCommand command = new SqlCommand("<%= print_sql_sp_name_all %>", connection);
+        SqlDataReader reader;
+
+        command.CommandType = CommandType.StoredProcedure;
+
+        connection.Open();
+        reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+          <%= object_name %> <%= object_name.downcase %> = new <%= object_name %>();
+          <% @fields.each do |field| %>
+          <%= object_name.downcase %>.<%= field.csharp_name %> = (<%= field.csharp_type %>)reader["<%= field.sql_column_name %>"];<% end %>
+          <%= object_name.downcase %>.ID = (int)reader["<%= object_name %>ID"];
+
+          <%= object_name.pluralize.downcase %>.Add(<%= object_name.downcase %>.ID, <%= object_name.downcase %>);
+        }
+        connection.Close();
+
+      }
+
+      return <%= object_name.pluralize.downcase %>;
+    }
   }
+
 }

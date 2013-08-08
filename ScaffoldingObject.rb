@@ -7,9 +7,8 @@ class ScaffoldingObject
 
   def initialize
     @fields = Array.new
-    
     @template_erb_class = File.open('templates/Class.cs.erb') { |f| f.read }
-	@template_erb_class_vb = File.open('templates/Class.vb.erb') { |f| f.read }
+    @template_erb_class_vb = File.open('templates/Class.vb.erb') { |f| f.read }
     @template_erb_sql = File.open('templates/SQL.sql.erb') { |f| f.read }
     @template_erb_webform = File.open('templates/WebForm.aspx.erb') { |f| f.read }
     @template_erb_view_edit = File.open('templates/Edit.html.cs.erb') { |f| f.read }
@@ -18,21 +17,21 @@ class ScaffoldingObject
   def add_field field
     @fields << field
   end
-  
+
   def table_name
-	"#{cap @prefix}_#{display_name}".gsub(last_word(display_name), last_word(display_name).pluralize).gsub(' ', '')
+    "#{cap @prefix}_#{display_name}".gsub(last_word(display_name), last_word(display_name).pluralize).gsub(' ', '')
   end
-  
+
   def object_name
-	"#{display_name}".gsub(last_word(display_name), last_word(display_name).singularize).gsub(' ', '')
+    "#{display_name}".gsub(last_word(display_name), last_word(display_name).singularize).gsub(' ', '')
   end
-  
+
   def id_name
-	object_name
+    object_name
   end
-    
+
   def display_name
-	"#{cap name}"
+    "#{cap name}"
   end
 
   def print_sql_script
@@ -44,7 +43,7 @@ class ScaffoldingObject
     template = ERB.new @template_erb_class
     template.result(binding)
   end
-  
+
   def print_vb_class
     template = ERB.new @template_erb_class_vb
     template.result(binding)
@@ -64,10 +63,14 @@ class ScaffoldingObject
     table_name
   end
 
+  def print_sql_sp_name_all
+    "#{table_name}GetAll"
+  end
+
   def print_sql_sp_name_load
     "#{table_name}GetByID"
   end
- 
+
   def print_sql_sp_name_update
     "#{table_name}Update"
   end
@@ -75,20 +78,19 @@ class ScaffoldingObject
   def print_sql_sp_name_save
     "#{table_name}Add"
   end
- 
+
   def print_sql_sp_name_delete
     "#{table_name}Delete"
   end
 
   private
-  
+
   def cap words
-	words.split(" ").map {|words| words.capitalize}.join(" ") if (words)
+    words.split(" ").map {|words| words.capitalize}.join(" ") if (words)
   end
-  
+
   def last_word words
-	words.split(" ").last
+    words.split(" ").last
   end
-  
- 
+
 end
