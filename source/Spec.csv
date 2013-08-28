@@ -1,28 +1,12 @@
 Prefix,Table,Column,DB Type
-Village Fiscal Officers,Registrations,First Name,varchar(50)
-Village Fiscal Officers,Registrations,Last Name,varchar(50)
-Village Fiscal Officers,Registrations,Title,varchar(50)
-Village Fiscal Officers,Registrations,Entity,varchar(100)
-Village Fiscal Officers,Registrations,County,varchar(50)
-Village Fiscal Officers,Registrations,Address,varchar(50)
-Village Fiscal Officers,Registrations,City,varchar(50)
-Village Fiscal Officers,Registrations,State,varchar(2)
-Village Fiscal Officers,Registrations,Zip,varchar(50)
-Village Fiscal Officers,Registrations,Phone,varchar(50)
-Village Fiscal Officers,Registrations,Email,varchar(100)
-Village Fiscal Officers,Registrations,Fax,varchar(50)
-Village Fiscal Officers,Registrations,Vegetarian,bit
-Village Fiscal Officers,Registrations,LocationID,int
-Village Fiscal Officers,Registrations,Payment Type,varchar(20)
-Village Fiscal Officers,Registrations,Payment Number,varchar(50)
-Village Fiscal Officers,Registrations,Payment Amount,money
-Village Fiscal Officers,Registrations,Fee,money
-Village Fiscal Officers,Registrations,Notes,Text
-Village Fiscal Officers,Registrations,Registered,datetime
-Village Fiscal Officers,Locations,Name,varchar(100)
-Village Fiscal Officers,Locations,Address,varchar(100)
-Village Fiscal Officers,Locations,City,varchar(100)
-Village Fiscal Officers,Locations,State,varchar(2)
-Village Fiscal Officers,Locations,Zip,varchar(50)
-Village Fiscal Officers,Locations,Date,datetime
-Village Fiscal Officers,Locations,Closed,bit
+,Articles,Title,varchar(max)
+,Articles,Subtitle,varchar(max)
+,Articles,Synopsis,varchar(max)
+,Articles,HTML Content,varchar(max)
+,Articles,Tags,varchar(max)
+,Articles,Published,bit
+,Articles,Published Date,datetime
+,Articles,Featured,bit
+,Articles,Created,datetime
+,Articles,Last Modified,datetime
+,Articles,Notes,varchar(255)

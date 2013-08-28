@@ -1,6 +1,6 @@
-require 'FileUtils'
-require 'CSV'
-require 'ERB'
+require 'fileutils'
+require 'csv'
+require 'erb'
 
 require_relative 'ApplicationSpec.rb'
 
@@ -71,7 +71,6 @@ def print_outputs spec
   sql = ""
 	
   webform = ""
-  mvcform = ""
   model_path = "#{OutputPath}models/"
   view_path = "#{OutputPath}views/"
 
@@ -95,8 +94,6 @@ def print_outputs spec
 	File.open("#{OutputPath}#{table.object_name}Edit.aspx", 'w') {|f| f.write(webform) }
 
   end
-  scripts_path = "#{OutputPath}scripts/"
- 
   # sql
   File.open("#{OutputPath}SQLScript.sql", 'w') {|f| f.write(sql) }
   
