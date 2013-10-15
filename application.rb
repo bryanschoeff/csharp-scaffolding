@@ -5,8 +5,8 @@ require 'erb'
 require_relative 'ApplicationSpec.rb'
 
 RunDate = Time.new.strftime("%Y.%m.%d")
-ApplicationName = "Confirmation_Of_Independence.Models"
-DatabaseName = "HR"
+ApplicationName = "YearEnd"
+DatabaseName = "WebUAN"
 
 ApplicationPath = "#{Dir.pwd}/"
 SourcePath = "#{ApplicationPath}source/"
@@ -34,7 +34,7 @@ def load_file file, spec
   table = nil
   current_line = ''
 
-  CSV.foreach(file, {:headers => :first_row}) do |line|
+  CSV.foreach(file, {encoding: "iso-8859-1:UTF-8", :headers => :first_row}) do |line|
     if ("#{line[0]}#{line[1]}" != current_line)
       spec.add_table table unless table.nil?
 	  

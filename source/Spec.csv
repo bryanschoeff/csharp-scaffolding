@@ -1,12 +1,14 @@
 Prefix,Table,Column,DB Type
-,Articles,Title,varchar(max)
-,Articles,Subtitle,varchar(max)
-,Articles,Synopsis,varchar(max)
-,Articles,HTML Content,varchar(max)
-,Articles,Tags,varchar(max)
-,Articles,Published,bit
-,Articles,Published Date,datetime
-,Articles,Featured,bit
-,Articles,Created,datetime
-,Articles,Last Modified,datetime
-,Articles,Notes,varchar(255)
+Year End,Registrations,First Name,varchar(255)
+Year End,Registrations,Last Name,varchar(255)
+Year End,Registrations,Entity,varchar(255)
+Year End,Registrations,Entity ID,varchar(255)
+Year End,Registrations,County,varchar(255)
+Year End,Registrations,Phone,varchar(255)
+Year End,Registrations,Email,varchar(255)
+Year End,Registrations,Location,varchar(255)
+Year End,Registrations,Vegetarian Meal,bit
+Year End,Sessions,Name,varchar(255)
+Year End,Sessions,Type,varchar(255)
+Year End,Sessions,Capacity,int
+Year End,Sessions,Attendees,int

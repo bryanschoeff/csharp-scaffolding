@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System;
 
 namespace <%= ApplicationName %>.Models
 {
@@ -12,6 +13,10 @@ namespace <%= ApplicationName %>.Models
     <% @fields.each do |field| %>
         [Display(Name = "<%= field.display_name %>")<%= ", DisplayFormat(ConvertEmptyStringToNull = false)" if field.csharp_type == "string" %>]
         public <%= "#{field.csharp_type} #{field.csharp_name} { get; set; }"  %><% end %>
+        [Display(Name = "Created")]
+        public DateTime Created { get; set; }
+        [Display(Name = "Last Modified")]
+        public DateTime LastModified { get; set; }
 
     public <%= object_name %>()
     {
@@ -33,6 +38,8 @@ namespace <%= ApplicationName %>.Models
         reader.Read();
         <% @fields.each do |field| %>
             this.<%= field.csharp_name %> = (<%= field.csharp_type %>)reader["<%= field.sql_column_name %>"];<% end %>
+        this.Created = (DateTime)reader["Created"];
+        this.LastModified = (DateTime)reader["LastModified"];
         this.ID = (int)reader["<%= object_name %>ID"];
         connection.Close();
       }
@@ -117,8 +124,10 @@ namespace <%= ApplicationName %>.Models
         {
           <%= object_name %> <%= object_name.downcase %> = new <%= object_name %>();
           <% @fields.each do |field| %>
-          <%= object_name.downcase %>.<%= field.csharp_name %> = (<%= field.csharp_type %>)reader["<%= field.sql_column_name %>"];<% end %>
-          <%= object_name.downcase %>.ID = (int)reader["<%= object_name %>ID"];
+              <%= object_name.downcase %>.<%= field.csharp_name %> = (<%= field.csharp_type %>)reader["<%= field.sql_column_name %>"];<% end %>
+              <%= object_name.downcase %>.Created = (DateTime)reader["Created"];
+              <%= object_name.downcase %>.LastModified = (DateTime)reader["LastModified"];
+              <%= object_name.downcase %>.ID = (int)reader["<%= object_name %>ID"];
 
           <%= object_name.pluralize.downcase %>.Add(<%= object_name.downcase %>.ID, <%= object_name.downcase %>);
         }

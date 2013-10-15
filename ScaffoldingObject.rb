@@ -19,7 +19,7 @@ class ScaffoldingObject
   end
 
   def table_name
-    "#{cap @prefix}_#{display_name}".gsub(last_word(display_name), last_word(display_name).pluralize).gsub(' ', '')
+    "#{display_prefix}#{display_name}".gsub(last_word(display_name), last_word(display_name).pluralize).gsub(' ', '')
   end
 
   def object_name
@@ -28,6 +28,10 @@ class ScaffoldingObject
 
   def id_name
     object_name
+  end
+
+  def display_prefix
+    "#{cap @prefix}_" if @prefix
   end
 
   def display_name
@@ -86,7 +90,7 @@ class ScaffoldingObject
   private
 
   def cap words
-    words.split(" ").map {|words| words.capitalize}.join(" ") if (words)
+    words.split(" ").map {|word| word.capitalize}.join(" ") if (words)
   end
 
   def last_word words
